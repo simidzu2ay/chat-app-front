@@ -38,9 +38,11 @@ import { APP_GUARD } from '@nestjs/core';
     AuthModule,
   ],
 
-  providers: [{
-    provide: APP_GUARD,
-    useClass: GqlAuthGuard
-  }]
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: GqlAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

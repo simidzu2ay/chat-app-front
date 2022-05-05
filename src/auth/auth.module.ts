@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport'
+import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
@@ -17,6 +17,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
         expiresIn: '1h',
       },
     }),
-    UsersModule],
+    UsersModule,
+  ],
 })
 export class AuthModule {}

@@ -6,10 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-
-  constructor(
-      private readonly jwtServise: JwtService
-  ) {}
+  constructor(private readonly jwtServise: JwtService) {}
 
   async hashPassword(password: string) {
     return await bcrypt.hash(password, hashingPassword.saltRound);
@@ -34,7 +31,7 @@ export class AuthService {
 
     return {
       accessToken,
-      refreshToken
+      refreshToken,
     };
   }
 }

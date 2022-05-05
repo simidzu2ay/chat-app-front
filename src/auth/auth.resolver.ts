@@ -13,7 +13,7 @@ import { JwtTokens } from './entities/jwt.entity';
 export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
-    private readonly usersServise: UsersService,
+    private readonly usersServise: UsersService
   ) {}
 
   @Mutation(() => JwtTokens)
@@ -33,7 +33,7 @@ export class AuthResolver {
       username: data.username,
     });
 
-    return await this.authService.getTokens(user.id)
+    return await this.authService.getTokens(user.id);
   }
 
   @Mutation(() => JwtTokens)
