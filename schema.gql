@@ -1,0 +1,82 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  username: String!
+  createDate: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Message {
+  id: ID!
+  fromUser: User!
+  text: String!
+  chat: Chat!
+  updateDate: DateTime!
+}
+
+type Chat {
+  id: ID!
+  name: String!
+  members: [User!]!
+}
+
+type JwtTokens {
+  accessToken: String!
+  refreshToken: String!
+}
+
+type Query {
+  users: [User!]!
+  messages: [Message!]!
+  message(id: Int!): Message!
+  chats: [Chat!]!
+  chat(id: Int!): Chat!
+}
+
+type Mutation {
+  createMessage(createMessageInput: CreateMessageInput!): Message!
+  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
+  removeMessage(id: Int!): Message!
+  createChat(createChatInput: CreateChatInput!): Chat!
+  updateChat(updateChatInput: UpdateChatInput!): Chat!
+  removeChat(id: Int!): Chat!
+  signUp(data: SignUpInput!): JwtTokens!
+  logIn(data: LogInInput!): JwtTokens!
+}
+
+input CreateMessageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateMessageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateChatInput {
+  name: String!
+}
+
+input UpdateChatInput {
+  name: String
+  id: Int!
+}
+
+input SignUpInput {
+  username: String!
+  password: String!
+}
+
+input LogInInput {
+  username: String!
+  password: String!
+}
