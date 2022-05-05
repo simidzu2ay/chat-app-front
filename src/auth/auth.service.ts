@@ -3,10 +3,14 @@ import { hashingPassword } from './constants';
 import bcrypt from 'bcryptjs';
 import { JwtTokens } from './entities/jwt.entity';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtServise: JwtService) {}
+  constructor(
+    private readonly jwtServise: JwtService,
+    private readonly configService: ConfigService
+  ) {}
 
   async hashPassword(password: string) {
     return await bcrypt.hash(password, hashingPassword.saltRound);
@@ -21,12 +25,12 @@ export class AuthService {
     const accessToken = await this.jwtServise.signAsync({
       id: userId,
     });
-    // TODO: Make a env constant
+
     const refreshToken = await this.jwtServise.signAsync(
       {
         id: userId,
       },
-      { secret: 'TEST2', expiresIn: '1y' }
+      { secret: this.configService.get('jwt.secret.refresh'), expiresIn: '1y' }
     );
 
     return {
