@@ -47,17 +47,22 @@ type Mutation {
   createChat(createChatInput: CreateChatInput!): Chat!
   updateChat(updateChatInput: UpdateChatInput!): Chat!
   removeChat(id: Int!): Chat!
-  signUp(data: SignUpInput!): JwtTokens!
-  logIn(data: LogInInput!): JwtTokens!
+  signUp(input: SignUpInput!): JwtTokens!
+  logIn(input: LogInInput!): JwtTokens!
+  refresh(input: RefreshTokenInput!): JwtTokens!
 }
 
 input CreateMessageInput {
-  """Example field (placeholder)"""
+  """
+  Example field (placeholder)
+  """
   exampleField: Int!
 }
 
 input UpdateMessageInput {
-  """Example field (placeholder)"""
+  """
+  Example field (placeholder)
+  """
   exampleField: Int
   id: Int!
 }
@@ -79,4 +84,9 @@ input SignUpInput {
 input LogInInput {
   username: String!
   password: String!
+}
+
+input RefreshTokenInput {
+  refreshToken: String!
+  expiredToken: String!
 }

@@ -7,20 +7,25 @@ import { SignUpInput } from './dto/sign-up.input';
 import { Public } from './public.decorator';
 import { LogInInput } from './dto/log-in.input';
 import { JwtTokens } from './entities/jwt.entity';
+import { RefreshTokenInput } from './dto/refresh-token.input';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
-@Resolver()
+@Resolver('auth')
 @Public()
 export class AuthResolver {
   constructor(
     private readonly authService: AuthService,
-    private readonly usersServise: UsersService
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
 
   @Mutation(() => JwtTokens)
   async signUp(
-    @Args('data', { type: () => SignUpInput }) data: SignUpInput
+    @Args('input', { type: () => SignUpInput }) data: SignUpInput
   ): Promise<JwtTokens> {
-    if (await this.usersServise.findByName(data.username)) {
+    if (await this.usersService.findByName(data.username)) {
       // TODO: Move string to a locales file
       throw new BadRequestException(
         'User with this username already registered'
@@ -28,7 +33,7 @@ export class AuthResolver {
     }
 
     const passwordHash = await this.authService.hashPassword(data.password);
-    const user = await this.usersServise.create({
+    const user = await this.usersService.create({
       passwordHash,
       username: data.username,
     });
@@ -37,14 +42,12 @@ export class AuthResolver {
   }
 
   @Mutation(() => JwtTokens)
-  async logIn(
-    @Args('data', { type: () => LogInInput }) data: LogInInput
-  ): Promise<JwtTokens> {
-    const user = await this.usersServise.findByName(data.username);
+  async logIn(@Args('input') logInData: LogInInput): Promise<JwtTokens> {
+    const user = await this.usersService.findByName(logInData.username);
 
     if (user) {
       const isCorrectPassword = await this.authService.comparePassword(
-        data.password,
+        logInData.password,
         user.passwordHash
       );
 
@@ -53,6 +56,37 @@ export class AuthResolver {
       }
     }
 
-    throw new UnauthorizedException('Wrong Username/Password');
+    throw [new UnauthorizedException('Wrong Username/Password')];
+  }
+
+  @Mutation(() => JwtTokens)
+  async refresh(
+    @Args('input') { expiredToken, refreshToken }: RefreshTokenInput
+  ) {
+    try {
+      await this.jwtService.verifyAsync(expiredToken);
+    } catch (error) {
+      if (error.message === 'jwt expired') {
+        // TODO: refractor & catch bad refresh token
+        await this.jwtService.verifyAsync(refreshToken, {
+          secret: this.configService.get('jwt.secret.refresh'),
+        });
+
+        const decodedExpired = this.jwtService.decode(expiredToken) as Record<
+          string,
+          any
+        >;
+        const decodedRefresh = this.jwtService.decode(refreshToken) as Record<
+          string,
+          any
+        >;
+
+        if (decodedExpired.id === decodedRefresh.id) {
+          return await this.authService.getTokens(decodedRefresh.id);
+        }
+      }
+
+      throw [new BadRequestException(error.message)];
+    }
   }
 }
