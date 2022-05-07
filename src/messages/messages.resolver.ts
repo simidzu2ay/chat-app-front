@@ -31,14 +31,20 @@ export class MessagesResolver {
     @Args('input') message: SendMessageInput,
     @CurrentUserId() userId: number
   ) {
-    if (await this.chatsService.findOne(message.chatId)) {
+    const chat = await this.chatsService.findOne(message.chatId);
+
+    if (chat) {
+      if (!chat.membersIds.includes(userId))
+        throw new BadRequestException('You are not a member of this chat');
+
       const newMessage = await this.messagesService.send(message, userId);
       this.pubSub.publish('newMessage', {
         newMessage,
       });
       return newMessage;
+    } else {
+      throw new BadRequestException("Chat doesn't exists");
     }
-    throw new BadRequestException("Chat doesn't exists");
   }
 
   @Subscription(() => Message, {
