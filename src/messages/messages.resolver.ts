@@ -43,13 +43,24 @@ export class MessagesResolver {
 
   @Subscription(() => Message, {
     name: 'newMessage',
-    filter(this: MessagesResolver, payload, variables) {
-      console.log(payload, variables);
+    async filter(
+      this: MessagesResolver,
+      { newMessage }: { newMessage: Message },
+      variables
+    ) {
+      const userId: number = variables.userId;
+      const chat = await this.chatsService.findOne(newMessage.chatId);
 
-      return true;
+      return chat.membersIds.includes(userId);
     },
   })
-  async subscribeToNewMessages(@CurrentUserId() userId: number) {
+  async subscribeToNewMessages(
+    @Args('userId') userIdByUser: number,
+    @CurrentUserId() userId: number
+  ) {
+    // I don't know any others ways to pass userId into variables in filter
+    if (userIdByUser !== userId)
+      throw new BadRequestException('Passed wrong id');
     return this.pubSub.asyncIterator('newMessage');
   }
 
