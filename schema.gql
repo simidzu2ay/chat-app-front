@@ -34,16 +34,12 @@ type JwtTokens {
 
 type Query {
   users: [User!]!
-  messages: [Message!]!
-  message(id: Int!): Message!
   chats: [Chat!]!
   chat(id: Int!): Chat!
 }
 
 type Mutation {
-  createMessage(createMessageInput: CreateMessageInput!): Message!
-  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
-  removeMessage(id: Int!): Message!
+  sendMessage(input: SendMessageInput!): Message!
   createChat(createChatInput: CreateChatInput!): Chat!
   updateChat(updateChatInput: UpdateChatInput!): Chat!
   removeChat(id: Int!): Chat!
@@ -52,19 +48,9 @@ type Mutation {
   refresh(input: RefreshTokenInput!): JwtTokens!
 }
 
-input CreateMessageInput {
-  """
-  Example field (placeholder)
-  """
-  exampleField: Int!
-}
-
-input UpdateMessageInput {
-  """
-  Example field (placeholder)
-  """
-  exampleField: Int
-  id: Int!
+input SendMessageInput {
+  text: String!
+  chatId: Float!
 }
 
 input CreateChatInput {

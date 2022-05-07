@@ -27,9 +27,9 @@ export class AuthResolver {
   ): Promise<JwtTokens> {
     if (await this.usersService.findByName(data.username)) {
       // TODO: Move string to a locales file
-      throw [
-        new BadRequestException('User with this username already registered'),
-      ];
+      throw new BadRequestException(
+        'User with this username already registered'
+      );
     }
 
     const passwordHash = await this.authService.hashPassword(data.password);
@@ -56,7 +56,7 @@ export class AuthResolver {
       }
     }
 
-    throw [new UnauthorizedException('Wrong Username/Password')];
+    throw new UnauthorizedException('Wrong Username/Password');
   }
 
   @Mutation(() => JwtTokens)
@@ -86,7 +86,7 @@ export class AuthResolver {
         }
       }
 
-      throw [new BadRequestException(error.message)];
+      throw new BadRequestException(error.message);
     }
   }
 }
