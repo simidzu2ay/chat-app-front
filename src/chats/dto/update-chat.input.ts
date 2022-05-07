@@ -1,5 +1,5 @@
+import { Field, InputType, Int, PartialType } from '@nestjs/graphql';
 import { CreateChatInput } from './create-chat.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateChatInput extends PartialType(CreateChatInput) {

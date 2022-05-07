@@ -1,22 +1,19 @@
+import { BadRequestException } from '@nestjs/common';
 import {
   Args,
-  Int,
   Mutation,
   Parent,
-  Query,
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
-import { User } from '../users/entities/user.entity';
-import { SendMessageInput } from './dto/send-message.input';
-import { UpdateMessageInput } from './dto/update-message.input';
-import { Message } from './entities/message.entity';
-import { MessagesService } from './messages.service';
-import { UsersService } from '../users/users.service';
+import { CurrentUserId } from '../auth/current-user.decorator';
 import { ChatsService } from '../chats/chats.service';
 import { Chat } from '../chats/entities/chat.entity';
-import { CurrentUserId } from '../auth/current-user.decorator';
-import { BadRequestException } from '@nestjs/common';
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { SendMessageInput } from './dto/send-message.input';
+import { Message } from './entities/message.entity';
+import { MessagesService } from './messages.service';
 
 @Resolver(() => Message)
 export class MessagesResolver {

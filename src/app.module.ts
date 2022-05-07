@@ -1,16 +1,16 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import path from 'path';
+import { GqlAuthGuard } from './auth/auth.guard';
+import { AuthModule } from './auth/auth.module';
 import { ChatsModule } from './chats/chats.module';
+import configurationYaml from './config/configuration.yaml';
 import { MessagesModule } from './messages/messages.module';
 import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
-import { GqlAuthGuard } from './auth/auth.guard';
-import { APP_GUARD } from '@nestjs/core';
-import { ConfigModule } from '@nestjs/config';
-import configurationYaml from './config/configuration.yaml';
 
 @Module({
   imports: [

@@ -1,16 +1,16 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import {
+  Column,
   Entity,
   JoinColumn,
-  Column,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  ManyToOne,
   RelationId,
+  UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
 import { Chat } from '../../chats/entities/chat.entity';
+import { User } from '../../users/entities/user.entity';
 
 @ObjectType()
 @Entity()

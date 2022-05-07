@@ -1,10 +1,10 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { ChatsService } from './chats.service';
-import { ChatsResolver } from './chats.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Chat } from './entities/chat.entity';
 import { MessagesModule } from '../messages/messages.module';
 import { UsersModule } from '../users/users.module';
+import { ChatsResolver } from './chats.resolver';
+import { ChatsService } from './chats.service';
+import { Chat } from './entities/chat.entity';
 
 @Module({
   providers: [ChatsResolver, ChatsService],

@@ -1,5 +1,4 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
-import { User } from '../../users/entities/user.entity';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   Entity,
@@ -12,6 +11,7 @@ import {
   RelationId,
 } from 'typeorm';
 import { Message } from '../../messages/entities/message.entity';
+import { User } from '../../users/entities/user.entity';
 
 @ObjectType()
 @Entity()

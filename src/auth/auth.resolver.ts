@@ -1,15 +1,14 @@
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { User } from '../users/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
-import { SignUpInput } from './dto/sign-up.input';
-import { Public } from './public.decorator';
 import { LogInInput } from './dto/log-in.input';
-import { JwtTokens } from './entities/jwt.entity';
 import { RefreshTokenInput } from './dto/refresh-token.input';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { SignUpInput } from './dto/sign-up.input';
+import { JwtTokens } from './entities/jwt.entity';
+import { Public } from './public.decorator';
 
 @Resolver('auth')
 @Public()
