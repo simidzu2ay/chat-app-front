@@ -2,3 +2,8 @@ jwt:
   secret:
     access: asdj
     refresh: hfd
+
+hashing:
+  password:
+    salt:
+      round: 10

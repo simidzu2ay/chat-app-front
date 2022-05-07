@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { hashingPassword } from './constants';
 import bcrypt from 'bcryptjs';
 import { JwtTokens } from './entities/jwt.entity';
 import { JwtService } from '@nestjs/jwt';
@@ -13,7 +12,10 @@ export class AuthService {
   ) {}
 
   async hashPassword(password: string) {
-    return await bcrypt.hash(password, hashingPassword.saltRound);
+    return await bcrypt.hash(
+      password,
+      this.configService.get('hashing.password.salt.round')
+    );
   }
 
   async comparePassword(plainPassword: string, hashPassword: string) {
