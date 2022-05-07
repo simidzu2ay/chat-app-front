@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import path from 'path';
 import { GqlAuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
@@ -17,11 +18,27 @@ import { UsersModule } from './users/users.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
       debug: true,
       autoSchemaFile: path.join(__dirname, '..', 'schema.gql'),
-      installSubscriptionHandlers: true,
       subscriptions: {
         'graphql-ws': true,
+      },
+
+      context: context => {
+        if (context?.extra?.request) {
+          return {
+            req: {
+              ...context?.extra?.request,
+              headers: {
+                ...context?.extra?.request?.headers,
+                ...context?.connectionParams,
+              },
+            },
+          };
+        }
+
+        return { req: context?.req };
       },
       cors: {
         origin: '*',

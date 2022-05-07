@@ -4,7 +4,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
   RelationId,
   UpdateDateColumn,
@@ -19,7 +18,7 @@ export class Message {
   @Field(() => ID)
   id: number;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @Field(() => User)
   @JoinColumn()
   fromUser: User;

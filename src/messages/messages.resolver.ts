@@ -1,11 +1,13 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import {
   Args,
   Mutation,
   Parent,
   ResolveField,
   Resolver,
+  Subscription,
 } from '@nestjs/graphql';
+import { PubSub } from 'graphql-subscriptions';
 import { CurrentUserId } from '../auth/current-user.decorator';
 import { ChatsService } from '../chats/chats.service';
 import { Chat } from '../chats/entities/chat.entity';
@@ -20,7 +22,8 @@ export class MessagesResolver {
   constructor(
     private readonly messagesService: MessagesService,
     private readonly usersService: UsersService,
-    private readonly chatsService: ChatsService
+    private readonly chatsService: ChatsService,
+    @Inject('PUB_SUB') private readonly pubSub: PubSub
   ) {}
 
   @Mutation(() => Message)
@@ -29,9 +32,25 @@ export class MessagesResolver {
     @CurrentUserId() userId: number
   ) {
     if (await this.chatsService.findOne(message.chatId)) {
-      return await this.messagesService.send(message, userId);
+      const newMessage = await this.messagesService.send(message, userId);
+      this.pubSub.publish('newMessage', {
+        newMessage,
+      });
+      return newMessage;
     }
     throw new BadRequestException("Chat doesn't exists");
+  }
+
+  @Subscription(() => Message, {
+    name: 'newMessage',
+    filter(this: MessagesResolver, payload, variables) {
+      console.log(payload, variables);
+
+      return true;
+    },
+  })
+  async subscribeToNewMessages(@CurrentUserId() userId: number) {
+    return this.pubSub.asyncIterator('newMessage');
   }
 
   @ResolveField('fromUser', () => User)
