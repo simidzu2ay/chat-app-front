@@ -11,25 +11,30 @@ export class ChatsService {
     @InjectRepository(Chat) private readonly chatsRepository: Repository<Chat>
   ) {}
 
-  async create(createChatInput: CreateChatInput) {
-    const chat = this.chatsRepository.create(createChatInput);
+  async create(createChatInput: CreateChatInput & { ownerId: number }) {
+    const chat = this.chatsRepository.create({
+      membersIds: createChatInput.members,
+      messages: [],
+      name: createChatInput.name,
+      ownerId: createChatInput.ownerId,
+    });
 
-    return await this.chatsRepository.save(chat);
-  }
+    // ---->  https://github.com/typeorm/typeorm/issues/1795
+    chat.members = createChatInput.members.map(member => ({
+      id: member,
+    })) as any;
 
-  async findAll() {
-    return await this.chatsRepository.find();
+    const { id } = await this.chatsRepository.save(chat);
+    // Allows the user to get a list of members immediately
+    return await this.findOne(id);
   }
 
   async findOne(id: number) {
-    return await this.chatsRepository.findOne(id);
-  }
-
-  update(id: number, updateChatInput: UpdateChatInput) {
-    return `This action updates a #${id} chat`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+    return await this.chatsRepository.findOne(id, {
+      loadRelationIds: {
+        relations: ['members'],
+        disableMixedMap: true,
+      },
+    });
   }
 }

@@ -24,6 +24,7 @@ type Message {
 type Chat {
   id: ID!
   name: String!
+  owner: User!
   members: [User!]!
 }
 
@@ -34,15 +35,11 @@ type JwtTokens {
 
 type Query {
   users: [User!]!
-  chats: [Chat!]!
-  chat(id: Int!): Chat!
 }
 
 type Mutation {
   sendMessage(input: SendMessageInput!): Message!
-  createChat(createChatInput: CreateChatInput!): Chat!
-  updateChat(updateChatInput: UpdateChatInput!): Chat!
-  removeChat(id: Int!): Chat!
+  createChat(input: CreateChatInput!): Chat!
   signUp(input: SignUpInput!): JwtTokens!
   logIn(input: LogInInput!): JwtTokens!
   refresh(input: RefreshTokenInput!): JwtTokens!
@@ -55,11 +52,7 @@ input SendMessageInput {
 
 input CreateChatInput {
   name: String!
-}
-
-input UpdateChatInput {
-  name: String
-  id: Int!
+  members: [Int!]!
 }
 
 input SignUpInput {

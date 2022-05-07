@@ -29,6 +29,7 @@ export class Message {
   text: string;
 
   @RelationId((m: Message) => m.fromUser)
+  @Column()
   fromUserId: number;
 
   @Field(() => Chat)
@@ -39,7 +40,7 @@ export class Message {
   @Column({ name: 'chatId' })
   chatId: number;
 
-  @Field(type => GraphQLISODateTime)
+  @Field(() => GraphQLISODateTime)
   @UpdateDateColumn()
   updateDate: Date;
 }

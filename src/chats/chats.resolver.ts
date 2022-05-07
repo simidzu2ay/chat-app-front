@@ -14,6 +14,7 @@ import { UpdateChatInput } from './dto/update-chat.input';
 import { User } from '../users/entities/user.entity';
 import { MessagesService } from '../messages/messages.service';
 import { UsersService } from '../users/users.service';
+import { CurrentUserId } from '../auth/current-user.decorator';
 
 @Resolver(() => Chat)
 export class ChatsResolver {
@@ -24,32 +25,26 @@ export class ChatsResolver {
   ) {}
 
   @Mutation(() => Chat)
-  createChat(@Args('createChatInput') createChatInput: CreateChatInput) {
-    return this.chatsService.create(createChatInput);
-  }
+  async createChat(
+    @Args('input') createChatInput: CreateChatInput,
+    @CurrentUserId() userId
+  ) {
+    const members = [...new Set([userId, ...createChatInput.members])];
 
-  @Query(() => [Chat], { name: 'chats' })
-  findAll() {
-    return this.chatsService.findAll();
-  }
-
-  @Query(() => Chat, { name: 'chat' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.chatsService.findOne(id);
-  }
-
-  @Mutation(() => Chat)
-  updateChat(@Args('updateChatInput') updateChatInput: UpdateChatInput) {
-    return this.chatsService.update(updateChatInput.id, updateChatInput);
-  }
-
-  @Mutation(() => Chat)
-  removeChat(@Args('id', { type: () => Int }) id: number) {
-    return this.chatsService.remove(id);
+    return await this.chatsService.create({
+      members,
+      name: createChatInput.name,
+      ownerId: userId,
+    });
   }
 
   @ResolveField('members', () => [User])
   async getChatMembers(@Parent() parent: Chat) {
     return await this.usersServise.findMany(parent.membersIds);
+  }
+
+  @ResolveField('owner', () => User)
+  async getChatOwner(@Parent() parent: Chat) {
+    return await this.usersServise.findOne(parent.ownerId);
   }
 }

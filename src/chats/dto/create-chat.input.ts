@@ -1,9 +1,19 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 @InputType()
 export class CreateChatInput {
   @IsString()
+  @IsNotEmpty()
   @Field()
   name: string;
+
+  @Field(() => [Int])
+  @IsNumber(
+    {},
+    {
+      each: true,
+    }
+  )
+  members: number[];
 }

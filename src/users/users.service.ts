@@ -36,12 +36,4 @@ export class UsersService {
   async findMany(ids: number[]): Promise<User[]> {
     return await this.userRepositpry.findByIds(ids);
   }
-
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
 }

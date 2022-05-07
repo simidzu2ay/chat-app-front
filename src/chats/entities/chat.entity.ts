@@ -3,8 +3,10 @@ import { User } from '../../users/entities/user.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
@@ -21,6 +23,15 @@ export class Chat {
   @Column()
   @Field()
   name: string;
+
+  @Field()
+  @ManyToOne(() => User)
+  @JoinColumn()
+  owner: User;
+
+  @RelationId((chat: Chat) => chat.owner)
+  @Column()
+  ownerId: number;
 
   @ManyToMany(() => User)
   @Field(() => [User])
