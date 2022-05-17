@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import cookie from 'cookie';
 import { IncomingMessage } from 'http';
 import type { AppProps } from 'next/app';
+import App from 'next/app';
 import { createApolloClient } from '../apollo-client';
 import { AuthProvider } from '../context/AuthContext';
 import '../styles/globals.css';
@@ -29,11 +30,12 @@ function parseCookies(req?: IncomingMessage) {
 }
 
 // @ts-ignore
-MyApp.getInitialProps = ({ ctx }) => {
-  const cookie = parseCookies(ctx.req);
+MyApp.getInitialProps = async ctx => {
+  const cookie = parseCookies(ctx.ctx.req);
 
   return {
-    cookie
+    cookie,
+    ...(await App.getInitialProps(ctx))
   };
 };
 

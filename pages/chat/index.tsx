@@ -1,3 +1,4 @@
+import { ID } from 'graphql-ws';
 import { NextPage } from 'next';
 import ChatList from '../../components/pages/chat/ChatList';
 import { Chat } from '../../graphql.api';
@@ -57,12 +58,25 @@ const chats: Array<Pick<Chat, 'id' | 'name'>> = [
   }
 ];
 
-const ChatPage: NextPage = () => {
+interface Props {
+  id?: ID;
+}
+
+const ChatPage: NextPage<Props> = ({ id }) => {
   return (
     <div>
-      <ChatList chats={chats} active="3" />
+      <ChatList chats={chats} active={id} />
     </div>
   );
+};
+
+ChatPage.getInitialProps = async ({ query }) => {
+  const { id } = query;
+  if (Array.isArray(id)) return {};
+
+  return {
+    id
+  };
 };
 
 export default ChatPage;
