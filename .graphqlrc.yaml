@@ -1,0 +1,7 @@
+schema: ./schema.gql
+extensions:
+  codegen:
+    generates:
+      ./graphql.api.d.ts:
+        plugins:
+          - typescript
