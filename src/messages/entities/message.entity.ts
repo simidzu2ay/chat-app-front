@@ -1,6 +1,7 @@
 import { Field, GraphQLISODateTime, ID, ObjectType } from '@nestjs/graphql';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -14,7 +15,7 @@ import { User } from '../../users/entities/user.entity';
 @ObjectType()
 @Entity()
 export class Message {
-  @PrimaryGeneratedColumn({ name: 'id' })
+  @PrimaryGeneratedColumn()
   @Field(() => ID)
   id: number;
 
@@ -42,4 +43,8 @@ export class Message {
   @Field(() => GraphQLISODateTime)
   @UpdateDateColumn()
   updateDate: Date;
+
+  @Field(() => GraphQLISODateTime)
+  @CreateDateColumn()
+  createDate: Date;
 }

@@ -33,15 +33,21 @@ export class MessagesResolver {
   ) {
     const chat = await this.chatsService.findOne(message.chatId);
 
+    // TODO: make unique ids for chat like in a messages
     if (chat) {
       if (!chat.membersIds.includes(userId))
         throw new BadRequestException('You are not a member of this chat');
 
       const newMessage = await this.messagesService.send(message, userId);
+      const userNewMessage = await this.messagesService.convertFromUserToDBSavingId(
+        newMessage.find(m => m.userId === userId)
+      )
+
       this.pubSub.publish('newMessage', {
-        newMessage,
+        newMessage: userNewMessage,
       });
-      return newMessage;
+
+      return userNewMessage;
     } else {
       throw new BadRequestException("Chat doesn't exists");
     }

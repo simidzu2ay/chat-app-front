@@ -6,6 +6,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+enum AccountType {
+  USER = 'user',
+  ADMIN = 'admin',
+}
+
 @ObjectType()
 @Entity()
 export class User {
@@ -19,6 +24,13 @@ export class User {
 
   @Column()
   passwordHash: string;
+
+  @Column({
+    type: 'enum',
+    enum: AccountType,
+    default: AccountType.USER,
+  })
+  type: AccountType;
 
   @Field()
   @CreateDateColumn()

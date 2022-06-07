@@ -18,6 +18,15 @@ type JwtTokens {
   refreshToken: String!
 }
 
+type Message {
+  id: ID!
+  fromUser: User!
+  text: String!
+  chat: Chat!
+  updateDate: DateTime!
+  createDate: DateTime!
+}
+
 type Chat {
   id: ID!
   name: String!
@@ -25,16 +34,9 @@ type Chat {
   members: [User!]!
 }
 
-type Message {
-  id: ID!
-  fromUser: User!
-  text: String!
-  chat: Chat!
-  updateDate: DateTime!
-}
-
 type Query {
   users: [User!]!
+  user(id: Float!): User!
 }
 
 type Mutation {

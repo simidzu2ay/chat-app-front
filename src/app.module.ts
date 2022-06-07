@@ -46,8 +46,8 @@ import { UsersModule } from './users/users.module';
       },
     }),
     TypeOrmModule.forRoot({
-      type: 'better-sqlite3',
-      database: __dirname + '/../database/some-chat.db',
+      type: 'postgres',
+      database: 'chat-app',
       synchronize: true,
       entities: ['dist/**/*.entity{.ts,.js}'],
     }),
