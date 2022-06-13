@@ -28,6 +28,15 @@ export type Chat = {
   owner: User;
 };
 
+export type ChatWithLastMessage = {
+  __typename?: 'ChatWithLastMessage';
+  id: Scalars['ID'];
+  lastMessage: Message;
+  members: Array<User>;
+  name: Scalars['String'];
+  owner: User;
+};
+
 export type CreateChatInput = {
   members: Array<Scalars['Int']>;
   name: Scalars['String'];
@@ -47,6 +56,8 @@ export type LogInInput = {
 export type Message = {
   __typename?: 'Message';
   chat: Chat;
+  createDate: Scalars['DateTime'];
+  from: User;
   fromUser: User;
   id: Scalars['ID'];
   text: Scalars['String'];
@@ -63,19 +74,19 @@ export type Mutation = {
 };
 
 export type MutationCreateChatArgs = {
-  input: CreateChatInput;
+  chat: CreateChatInput;
 };
 
 export type MutationLogInArgs = {
-  input: LogInInput;
+  data: LogInInput;
 };
 
 export type MutationRefreshArgs = {
-  input: RefreshTokenInput;
+  data: RefreshTokenInput;
 };
 
 export type MutationSendMessageArgs = {
-  input: SendMessageInput;
+  message: SendMessageInput;
 };
 
 export type MutationSignUpArgs = {
@@ -84,8 +95,18 @@ export type MutationSignUpArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  me: User;
+  chats: Array<ChatWithLastMessage>;
+  user: User;
   users: Array<User>;
+};
+
+export type QueryChatsArgs = {
+  count?: InputMaybe<Scalars['Float']>;
+  offset?: InputMaybe<Scalars['Float']>;
+};
+
+export type QueryUserArgs = {
+  id: Scalars['Float'];
 };
 
 export type RefreshTokenInput = {

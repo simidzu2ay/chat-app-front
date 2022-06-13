@@ -12,7 +12,6 @@ const LoginPage: NextPage = () => {
   const { register, handleSubmit } = useForm<Input>();
   const onSubmit: SubmitHandler<Input> = data => {
     logIn(data.username, data.password);
-    console.log(user);
   };
 
   return (

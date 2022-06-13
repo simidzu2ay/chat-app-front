@@ -1,0 +1,36 @@
+/* TODO: Make a normal custom scrollbar */
+
+.chat_list_item {
+  @apply mx-4 h-screen divide-y divide-gray-400 pt-2 md:w-72;
+
+  .chat_list_item_avatar_wrapper {
+    @apply h-16 w-16;
+  }
+
+  .chat_list_item_avatar {
+    @apply relative h-16 w-16 overflow-hidden rounded-full;
+  }
+
+  .chat_list_item_main {
+    @apply flex items-center gap-4 p-2 first:pt-0 last:pb-0 active:bg-gray-600;
+  }
+
+  .chat_list_info {
+    @apply inline-block min-w-0 truncate;
+  }
+
+  .chat_item_name {
+  }
+
+  .chat_item_info {
+    @apply truncate;
+  }
+
+  .chat_item_username {
+    @apply text-gray-400;
+  }
+
+  .chat_item_message {
+    @apply text-[#e2e2e2];
+  }
+}

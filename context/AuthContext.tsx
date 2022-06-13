@@ -4,6 +4,7 @@ import React, {
   createContext,
   PropsWithChildren,
   useContext,
+  useEffect,
   useMemo,
   useState
 } from 'react';
@@ -15,7 +16,6 @@ type LogIn = (username: string, password: string) => Promise<void>;
 
 export interface AuthUser {
   id: number;
-  username: string;
 }
 
 interface AuthProps {
@@ -27,18 +27,9 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-const GET_CURRENT_USER = gql`
-  query {
-    me {
-      id
-      username
-    }
-  }
-`;
-
 const MUTATE_LOG_IN = gql`
-  mutation LogIn($input: LogInInput!) {
-    logIn(input: $input) {
+  mutation LogIn($data: LogInInput!) {
+    logIn(data: $data) {
       accessToken
       refreshToken
     }
@@ -59,7 +50,7 @@ export const AuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
     >({
       mutation: MUTATE_LOG_IN,
       variables: {
-        input: {
+        data: {
           password,
           username
         }
@@ -70,21 +61,21 @@ export const AuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
     Cookies.set('token', logInData.accessToken);
     Cookies.set('refresh', logInData.refreshToken);
 
-    const { data: user } = await client.query<User>({
-      query: GET_CURRENT_USER,
-      context: {
-        headers: {
-          authorization: `Bearer ${logInData!.accessToken}`
-        }
-      }
-    });
-
     setUser({
-      id: +user.id,
-      username: user.username
+      id: +JSON.parse(atob(logInData.accessToken.split('.')[1])).id
     });
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (Cookies.get('token')) {
+      const token = Cookies.get('token')!;
+
+      setUser({
+        id: +JSON.parse(atob(token.split('.')[1])).id
+      });
+    }
+  }, []);
 
   const memorized = useMemo(
     () => ({
