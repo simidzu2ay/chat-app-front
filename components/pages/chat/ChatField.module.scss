@@ -1,0 +1,10 @@
+.chat_nav {
+  @apply fixed flex w-screen min-w-0 flex-1 items-center gap-4 px-4 py-2 shadow-lg bg-primary;
+}
+
+@media (min-width: 768px) {
+  .chat_nav {
+    // 18 rem - size of chatList
+    max-width: calc(100% - 18rem);
+  }
+}

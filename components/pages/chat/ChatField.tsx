@@ -21,6 +21,7 @@ import { ID } from 'graphql-ws';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { BsChevronDown } from 'react-icons/bs';
 import Avatar from '../../small/Avatar';
+import styles from './ChatField.module.scss';
 
 const GET_MESSAGES_LIST = gql`
   query GetMessagesList($chatId: Int!) {
@@ -88,7 +89,7 @@ interface ChatNavProps {
 
 const ChatNav = ({ handler, name }: ChatNavProps) => {
   return (
-    <div className="fixed z-[1] flex w-screen min-w-0 items-center gap-4 px-4 py-2 shadow-lg bg-primary md:w-72">
+    <div className={styles.chat_nav}>
       <button onClick={handler} className="md:hidden">
         <GiHamburgerMenu />
       </button>
@@ -196,7 +197,7 @@ export const ChatField: FC<ChatFieldProps> = ({
       }
     >
       <ChatNav handler={hamburgerOnClick} name={chatName} />
-      <div className="flex h-full min-h-0 flex-col p-4">
+      <div className="mt-[3.5rem] flex h-full min-h-0 flex-col p-4">
         <div className="flex min-h-0  flex-col space-y-4 overflow-y-scroll">
           {messages.map(m => (
             <Message key={m.id} message={m} />
