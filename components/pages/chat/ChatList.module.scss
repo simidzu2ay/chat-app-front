@@ -1,7 +1,5 @@
-/* TODO: Make a normal custom scrollbar */
-
 .chat_list_item {
-  @apply mx-4 h-screen divide-y divide-gray-400 pt-2 md:w-72;
+  @apply h-full w-screen divide-y divide-gray-400 overflow-y-scroll pt-2 bg-primary md:w-72;
 
   .chat_list_item_avatar_wrapper {
     @apply h-16 w-16;

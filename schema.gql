@@ -38,7 +38,8 @@ type Message {
 
 type Query {
   users: [User!]!
-  user(id: Float!): User!
+  user(id: ID!): User!
+  messages(chatId: Int!): [Message!]!
   chats(offset: Float = 0, count: Float = 10): [Chat!]!
 }
 
@@ -52,7 +53,7 @@ type Mutation {
 
 input SendMessageInput {
   text: String!
-  chatId: Float!
+  chatId: Int!
 }
 
 input CreateChatInput {
@@ -76,5 +77,5 @@ input RefreshTokenInput {
 }
 
 type Subscription {
-  newMessage(userId: Float!): Message!
+  newMessage(userId: Int!): Message!
 }

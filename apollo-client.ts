@@ -19,7 +19,16 @@ export const createApolloClient = (accessToken?: string) => {
     typeof window !== 'undefined'
       ? new GraphQLWsLink(
           createClient({
-            url: 'ws://localhost:3000/graphql'
+            url: 'ws://localhost:3000/graphql',
+            connectionParams: () => {
+              if (!accessToken) return {};
+
+              return {
+                headers: {
+                  authorization: `Bearer ${accessToken}`
+                }
+              };
+            }
           })
         )
       : null;
@@ -60,7 +69,13 @@ export const createApolloClient = (accessToken?: string) => {
   const client = new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: concat(authMiddleware, splitLink),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({
+      typePolicies: {
+        Message: {
+          keyFields: ['id', 'chat', ['id']]
+        }
+      }
+    })
   });
 
   return client;

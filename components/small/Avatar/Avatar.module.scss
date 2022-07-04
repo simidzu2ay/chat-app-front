@@ -1,0 +1,15 @@
+.avatar {
+  @apply relative overflow-hidden rounded-full;
+}
+
+.avatar_medium {
+  @apply h-16 min-h-[4rem] w-16 min-w-[4rem];
+}
+
+.avatar_small {
+  @apply h-12 min-h-[3rem] w-12 min-w-[3rem];
+}
+
+.avatar_big {
+  @apply h-20 min-h-[5rem] w-20 min-w-[5rem];
+}

@@ -16,6 +16,7 @@ type LogIn = (username: string, password: string) => Promise<void>;
 
 export interface AuthUser {
   id: number;
+  token: string;
 }
 
 interface AuthProps {
@@ -35,6 +36,17 @@ const MUTATE_LOG_IN = gql`
     }
   }
 `;
+
+const generateUserData = (token: string): AuthUser => {
+  const user: AuthUser = {
+    id: +JSON.parse(atob(token.split('.')[1])).id,
+    token
+  };
+
+  console.log(user);
+
+  return user;
+};
 
 // TODO: Errors handler, SignUp, Refresh, GetUser
 export const AuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
@@ -61,9 +73,7 @@ export const AuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
     Cookies.set('token', logInData.accessToken);
     Cookies.set('refresh', logInData.refreshToken);
 
-    setUser({
-      id: +JSON.parse(atob(logInData.accessToken.split('.')[1])).id
-    });
+    setUser(generateUserData(logInData.accessToken));
     setLoading(false);
   };
 
@@ -71,9 +81,7 @@ export const AuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
     if (Cookies.get('token')) {
       const token = Cookies.get('token')!;
 
-      setUser({
-        id: +JSON.parse(atob(token.split('.')[1])).id
-      });
+      setUser(generateUserData(token));
     }
   }, []);
 
