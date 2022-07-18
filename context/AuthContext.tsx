@@ -43,8 +43,6 @@ const generateUserData = (token: string): AuthUser => {
     token
   };
 
-  console.log(user);
-
   return user;
 };
 

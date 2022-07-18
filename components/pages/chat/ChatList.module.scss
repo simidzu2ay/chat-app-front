@@ -1,5 +1,5 @@
 .chat_list_item {
-  @apply h-full w-screen divide-y divide-gray-400 overflow-y-scroll pt-2 bg-primary md:w-72;
+  @apply h-full w-screen divide-y divide-gray-400 overflow-y-scroll bg-primary md:w-full;
 
   .chat_list_item_avatar_wrapper {
     @apply h-16 w-16;
@@ -10,7 +10,7 @@
   }
 
   .chat_list_item_main {
-    @apply flex items-center gap-4 p-2 first:pt-0 last:pb-0 active:bg-gray-600;
+    @apply flex items-center gap-4 p-2 active:bg-gray-600;
   }
 
   .chat_list_info {

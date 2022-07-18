@@ -5,20 +5,13 @@ import {
   useSubscription
 } from '@apollo/client';
 import { MdSend } from 'react-icons/md';
-import {
-  FC,
-  HTMLAttributes,
-  MouseEventHandler,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import { FC, MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { Message as ChatMessage } from '../../../graphql.api';
 import Message from '../../small/chat/Message';
 import Loader from '../../small/Loader';
 import { useAuth } from '../../../context/AuthContext';
 import { ID } from 'graphql-ws';
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { IoIosArrowBack } from 'react-icons/io';
 import { BsChevronDown } from 'react-icons/bs';
 import Avatar from '../../small/Avatar';
 import styles from './ChatField.module.scss';
@@ -91,7 +84,7 @@ const ChatNav = ({ handler, name }: ChatNavProps) => {
   return (
     <div className={styles.chat_nav}>
       <button onClick={handler} className="md:hidden">
-        <GiHamburgerMenu />
+        <IoIosArrowBack />
       </button>
 
       <Avatar
@@ -127,6 +120,8 @@ export const ChatField: FC<ChatFieldProps> = ({
   );
 
   useEffect(() => {
+    if (!chatId) return;
+
     fetchMessages({
       variables: {
         chatId: +chatId

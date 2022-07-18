@@ -4,8 +4,13 @@ import { useAuth } from '../../../context/AuthContext';
 import { Chat } from '../../../graphql.api';
 import Avatar from '../../small/Avatar';
 import styles from './ChatList.module.scss';
-import { GiHamburgerMenu } from 'react-icons/gi';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { HiSearch } from 'react-icons/hi';
+import Input from '../../small/Input';
+import Button from '../../small/Button';
+import { useEffect, useState, useTransition } from 'react';
+import classNames from 'classnames';
+import { gql, useLazyQuery } from '@apollo/client';
 
 interface Props {
   chats: Array<Chat>;
@@ -14,29 +19,83 @@ interface Props {
   chatState: boolean;
 }
 
+const QUERY_SEARCH_CHAT = gql`
+  query SeachChat($query: String!) {
+    searchChat(query: $query) {
+      id
+      name
+      lastMessage {
+        id
+        text
+        from {
+          id
+          username
+        }
+        chat {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+interface SearchChatResponse {
+  searchChat: Chat[];
+}
+
 // TODO: Split in smaller components
 const ChatList: React.FC<Props> = ({
-  chats,
+  chats: chatList,
   active,
   chatState,
   onChatClick = id => {}
 }) => {
   const { user } = useAuth();
+  const [chats, setChats] = useState(chatList);
+  const [search, setSearch] = useState('');
+  const [startSearch, { called }] =
+    useLazyQuery<SearchChatResponse>(QUERY_SEARCH_CHAT);
+
+  const searchChats = async (chatName: string) => {
+    const { data } = await startSearch({
+      variables: {
+        query: chatName
+      }
+    });
+
+    setChats(data?.searchChat || []);
+  };
+
+  useEffect(() => {
+    if (!called && !search) return;
+
+    const searchTimeout = setTimeout(searchChats, 450, search);
+
+    return () => clearTimeout(searchTimeout);
+  }, [search]);
+
+  const handleSearch = async (value: string) => {
+    setSearch(value);
+  };
 
   return (
     <div
-      className={
-        'fixed z-10 flex h-screen flex-col transition-transform duration-500 bg-primary md:static' +
-        (chatState
+      className={classNames(
+        'fixed z-10 flex h-screen flex-col transition-transform duration-500 bg-primary md:static md:w-72',
+        chatState
           ? ' -translate-x-full md:flex md:translate-x-0'
-          : ' translate-x-0')
-      }
+          : ' translate-x-0'
+      )}
     >
-      <div className="flex items-center justify-end gap-4 p-2">
-        <div className="flex items-center justify-center">
-          <input type="text" />
+      <div className="flex h-12 min-w-0 flex-1 items-center justify-between gap-4 p-2">
+        <Button>
+          <AiOutlinePlus />
+        </Button>
+        <Input value={search} onChange={e => handleSearch(e.target.value)} />
+        <Button onClick={() => searchChats(search)}>
           <HiSearch />
-        </div>
+        </Button>
       </div>
       <ul className={styles.chat_list_item}>
         {chats.map((chat, index) => (

@@ -12,12 +12,6 @@ body,
   @apply h-full w-full text-[#e5e5e5] bg-primary;
 }
 
-@layer components {
-  .login_input {
-    @apply w-full rounded border-2 border-none bg-gray-500 py-2.5 px-5 placeholder-[#e2e2e2] outline-none focus:bg-gray-400;
-  }
-}
-
 ::-webkit-scrollbar {
   width: 0.4rem;
 }

@@ -41,6 +41,7 @@ type Query {
   user(id: ID!): User!
   messages(chatId: Int!): [Message!]!
   chats(offset: Float = 0, count: Float = 10): [Chat!]!
+  searchChat(query: String!): [Chat!]!
 }
 
 type Mutation {

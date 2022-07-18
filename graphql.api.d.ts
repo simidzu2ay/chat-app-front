@@ -89,6 +89,7 @@ export type Query = {
   __typename?: 'Query';
   chats: Array<Chat>;
   messages: Array<Message>;
+  searchChat: Array<Chat>;
   user: User;
   users: Array<User>;
 };
@@ -100,6 +101,10 @@ export type QueryChatsArgs = {
 
 export type QueryMessagesArgs = {
   chatId: Scalars['Int'];
+};
+
+export type QuerySearchChatArgs = {
+  query: Scalars['String'];
 };
 
 export type QueryUserArgs = {
